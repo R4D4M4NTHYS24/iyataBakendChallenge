@@ -16,7 +16,7 @@ WORKDIR /app
 COPY . .
 
 # Instala dependencias Laravel
-RUN composer install --no-dev --optimize-autoloader
+RUN composer install --no-dev --optimize-autoloader --ignore-platform-reqs
 
 # Asigna permisos a storage y bootstrap/cache
 RUN chmod -R 775 storage bootstrap/cache
