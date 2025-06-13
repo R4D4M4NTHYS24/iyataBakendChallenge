@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: iyata-backend
+    env: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: APP_KEY
+        generateValue: true
+      - key: services.access_key
+        value: clave-supersecreta-iayata
+      - key: services.openai.key
+        value: tu_clave_api_openai
