@@ -1,15 +1,14 @@
-# Usa PHP con servidor embebido
 FROM php:8.2-cli
 
-# Instala extensiones necesarias
+# Instala extensiones necesarias para Laravel
 RUN apt-get update && apt-get install -y \
-    git curl unzip zip libzip-dev libonig-dev && \
-    docker-php-ext-install pdo mbstring zip
+    git curl unzip zip libzip-dev libonig-dev libxml2-dev libpng-dev libonig-dev \
+    && docker-php-ext-install pdo pdo_mysql mbstring zip tokenizer xml
 
-# Instala Composer
+# Instala Composer desde imagen oficial
 COPY --from=composer:2.6 /usr/bin/composer /usr/bin/composer
 
-# Define la raíz de trabajo
+# Define directorio de trabajo
 WORKDIR /app
 
 # Copia los archivos del proyecto
@@ -18,11 +17,11 @@ COPY . .
 # Instala dependencias Laravel
 RUN composer install --no-dev --optimize-autoloader --ignore-platform-reqs
 
-# Asigna permisos a storage y bootstrap/cache
+# Permisos para carpetas requeridas
 RUN chmod -R 775 storage bootstrap/cache
 
-# Expone el puerto 8080 que Render espera
+# Puerto expuesto por Laravel Artisan
 EXPOSE 8080
 
-# Instrucción de arranque
+# Comando de inicio del servidor embebido de Laravel
 CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8080"]
